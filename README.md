@@ -5,16 +5,25 @@ be used anywhere. It uses native `<audio>` where available and falls back
 to an invisible flash player to emulate it for other browsers. It also serves
 a consistent html player UI to all browsers which can be styled used standard css.
 
-It plays mp3s. **No ogg**. Because, lets be honest, in the real world, no one
-really exports ogg files. Sadly, that means Opera and Firefox get flash audio.
-Hopefully they can add mp3 support soon.
+Forked from [kolber/audiojs](http://kolber.github.com/audiojs/).
+
+## Differences from the original
+
+- Supports ogg, but you'll need to have:
+    - an mp3 fallback
+    - sources with `.mp3` and `.ogg` at the end, or specify `type="audio/ogg"`
+      and `type="audio/mpeg"`
+- css isn't automatically injected; you'll have to include the css manually.
+- If an `<audio>` element has an id, its wrapper will have the class `{element id}-audiojs`.
+- audiojs wrappers will only ever be created once per `<audio>`
 
 ## Usage
 
 1. Put `audio.js`, `player-graphics.gif` & `audiojs.swf` in the same folder.
 
-2. Include `audio.js`:
+2. Include `audio.js` and `audiojs.css`:
 
+        <link rel="stylesheet" href="/audiojs/audiojs.css">
         <script src="/audiojs/audio.js"></script>
 
 3. Initialise audiojs:
@@ -27,12 +36,27 @@ Hopefully they can add mp3 support soon.
 
 4. Then you can use `<audio>` wherever you like in your HTML:
 
-        <audio src="/mp3/juicy.mp3" preload="auto" />
+        <audio src="/sound/juicy.mp3" preload="auto"></audio>
+   
+   or
+   
+        <audio>
+          <source src="/sound/juicy.ogg">
+          <source src="/sound/juicy.mp3">
+        </audio>
 
-## Bugs / Contributions
+## Known Bugs
 
-- [Report a bug](https://github.com/kolber/audiojs/issues)
-- To contribute or send an idea, github message me or fork the project
+- The `autoplay` attribute is buggy on Firefox; don't use it. Use this initialiser instead:
+        
+        <script>
+          audiojs.events.ready(function() {
+            var as = audiojs.createAll();
+            for (var i = as.length - 1; i >= 0; i--) {
+              as[i].play();
+            }
+          });
+        </script>
 
 ## Build
 
